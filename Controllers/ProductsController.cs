@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using midterm_encinasValador.Data;
 using midterm_encinasValador.Models;
 
-namespace midterm_encinasValador.Controllers
+namespace midterm_valador.Controllers
 {
     public class ProductsController : Controller
     {
@@ -22,7 +17,7 @@ namespace midterm_encinasValador.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Products.ToListAsync());
+            return View(await _context.products.ToListAsync());
         }
 
         // GET: Products/Details/5
@@ -33,7 +28,7 @@ namespace midterm_encinasValador.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var product = await _context.products
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -54,10 +49,25 @@ namespace midterm_encinasValador.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,StockQuantity")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,StockQuantity,ProductImageUpload")] Product product)
         {
             if (ModelState.IsValid)
             {
+                if (product.ProductImageUpload != null)
+                {
+                    string fileName = Path.GetFileName(product.ProductImageUpload.FileName);
+                    string ext = Path.GetExtension(product.ProductImageUpload.FileName);
+
+                    product.ProductImage = fileName + ext;
+
+                    product.ProductImageUpload.CopyTo(
+                        new FileStream(@"wwwroot\images\product\" + fileName + ext, FileMode.CreateNew));
+                }
+                else
+                {
+                    product.ProductImage = "no-image.png";
+                }
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -73,7 +83,7 @@ namespace midterm_encinasValador.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.products.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
@@ -86,7 +96,7 @@ namespace midterm_encinasValador.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,StockQuantity")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,StockQuantity,ProductImage, ProductImageUpload")] Product product)
         {
             if (id != product.Id)
             {
@@ -95,6 +105,16 @@ namespace midterm_encinasValador.Controllers
 
             if (ModelState.IsValid)
             {
+                if (product.ProductImageUpload != null)
+                {
+                    string fileName = Path.GetFileName(product.ProductImageUpload.FileName);
+                    string ext = Path.GetExtension(product.ProductImageUpload.FileName);
+
+                    product.ProductImage = fileName + ext;
+
+                    product.ProductImageUpload.CopyTo(
+                        new FileStream(@"wwwroot\images\product\" + fileName + ext, FileMode.CreateNew));
+                }
                 try
                 {
                     _context.Update(product);
@@ -124,7 +144,7 @@ namespace midterm_encinasValador.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var product = await _context.products
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -139,10 +159,10 @@ namespace midterm_encinasValador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.products.FindAsync(id);
             if (product != null)
             {
-                _context.Products.Remove(product);
+                _context.products.Remove(product);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +171,7 @@ namespace midterm_encinasValador.Controllers
 
         private bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.Id == id);
+            return _context.products.Any(e => e.Id == id);
         }
     }
 }

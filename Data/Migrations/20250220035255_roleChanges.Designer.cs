@@ -12,8 +12,8 @@ using midterm_encinasValador.Data;
 namespace midterm_encinasValador.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250220025613_initialMigration")]
-    partial class initialMigration
+    [Migration("20250220035255_roleChanges")]
+    partial class roleChanges
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

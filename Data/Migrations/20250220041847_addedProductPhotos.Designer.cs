@@ -12,8 +12,8 @@ using midterm_encinasValador.Data;
 namespace midterm_encinasValador.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250220025613_initialMigration")]
-    partial class initialMigration
+    [Migration("20250220041847_addedProductPhotos")]
+    partial class addedProductPhotos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,6 +244,9 @@ namespace midterm_encinasValador.Data.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProductImage")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");

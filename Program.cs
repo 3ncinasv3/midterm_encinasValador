@@ -6,7 +6,7 @@ namespace midterm_encinasValador;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +16,22 @@ public class Program
             options.UseSqlServer(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("Owner only", policy => policy.RequireRole("Owner"));
+            options.AddPolicy("Buyer only", policy => policy.RequireRole("Buyer"));
+        });
         builder.Services.AddControllersWithViews();
 
         var app = builder.Build();
+
+        using (var scope = app.Services.CreateScope())
+        {
+            await DataSeeder.Initialize(app.Services);
+        }
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
