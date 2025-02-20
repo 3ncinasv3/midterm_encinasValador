@@ -7,6 +7,19 @@
 
 <h1>Index</h1>
 
+<form asp-action="Search" method="get">
+    <div class="form-group">
+        <input type="text" name="searchString" class="form-control" placeholder="Search by name or description" />
+    </div>
+    <div class="form-group">
+        <input type="number" name="minPrice" class="form-control" placeholder="Min Price" />
+        <input type="number" name="maxPrice" class="form-control" placeholder="Max Price" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </div>
+</form>
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -24,6 +37,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.StockQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category) 
             </th>
 
             <th></th>
@@ -48,6 +64,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StockQuantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category) 
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

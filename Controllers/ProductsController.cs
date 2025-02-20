@@ -173,5 +173,27 @@ namespace midterm_valador.Controllers
         {
             return _context.products.Any(e => e.Id == id);
         }
+        public async Task<IActionResult> Search(string searchString, decimal? minPrice, decimal? maxPrice)
+        {
+            var products = from p in _context.products
+                           select p;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Name.Contains(searchString) || p.Description.Contains(searchString));
+            }
+
+            if (minPrice.HasValue)
+            {
+                products = products.Where(p => p.Price >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                products = products.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            return View("Index", await products.ToListAsync());
+        }
     }
 }

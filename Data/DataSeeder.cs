@@ -10,14 +10,14 @@ namespace midterm_encinasValador.Data
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-            // Create roles
+
             await CreateRole(roleManager, "Owner");
             await CreateRole(roleManager, "Buyer");
 
-            // Create owner user
+
             await CreateUser(userManager, "owner@example.com", "Password123!", "Owner");
 
-            // Create buyer user
+
             await CreateUser(userManager, "buyer@example.com", "Password123!", "Buyer");
         }
 

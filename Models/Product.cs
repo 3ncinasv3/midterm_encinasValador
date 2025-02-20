@@ -20,5 +20,8 @@ namespace midterm_encinasValador.Models
         [Display(Name = "Photo")]
         public string? ProductImage { get; set; }
 
+        public string? Category { get; set; }
+
+
     }
 }
